@@ -4,6 +4,5 @@ Setelah clone project silahkan install virtual environment dulu
 
 Jika sudah install virtual environment silahkan install beberapa library berikut
 
-    pip install flask
-    pip install dnspython
-    pip install pymongo
+    pip install flask dnspython pymongo
+    

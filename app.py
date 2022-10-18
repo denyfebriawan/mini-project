@@ -15,7 +15,6 @@ def bucket_post():
     item_name_receive = request.form['item_name_give']
     item_quantity_receive = request.form['item_quantity_give']
     count = db.bucket.count_documents({})
-    num = count + 1
 
     doc = {
         'name' : item_name_receive,
