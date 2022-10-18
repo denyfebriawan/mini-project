@@ -12,17 +12,18 @@ def home():
 
 @app.route("/gudang", methods=["POST"])
 def bucket_post():
-    bucket_receive = request.form['bucket_give']
+    item_name_receive = request.form['item_name_give']
+    item_quantity_receive = request.form['item_quantity_give']
     count = db.bucket.count_documents({})
     num = count + 1
 
     doc = {
-        'num' : num,
-        'bucket' : bucket_receive,
-        'done' : 0
+        'name' : item_name_receive,
+        'quantity' : item_quantity_receive,
+        
     }
 
-    db.bucket.insert_one(doc)
+    db.gudangku.insert_one(doc)
 
     return jsonify({'msg': 'data saved!'})
     

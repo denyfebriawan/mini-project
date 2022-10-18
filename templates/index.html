@@ -4,7 +4,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GUDANGKU</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <script>
+
+      function save_item() {
+              
+              let item_name = $('#nama_item').val()
+              let item_quantity = $('#jumlah_item').val()
+
+              $.ajax({
+              type: "POST",
+              url: "/gudang",
+              data: {item_name_give: item_name,
+                      item_quantity_give: item_quantity},
+              success: function (response) {
+                  alert(response["msg"])
+                  window.location.reload()
+                  }
+              });
+          }
+
+    </script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    
+
   </head>
   <body>
 
@@ -22,11 +49,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+
+            <label for="nama_item" class="form-label">Item name</label>
+            <input type="text" id="nama_item" class="form-control" aria-describedby="passwordHelpBlock">
+            
+            <label for="jumlah_item" class="form-label">Item quantity</label>
+            <input type="text" id="jumlah_item" class="form-control" aria-describedby="passwordHelpBlock">
           </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" onclick="save_item()">Save</button>
           </div>
         </div>
       </div>
