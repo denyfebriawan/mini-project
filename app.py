@@ -10,7 +10,21 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route("/gudang", methods=["POST"])
+def bucket_post():
+    bucket_receive = request.form['bucket_give']
+    count = db.bucket.count_documents({})
+    num = count + 1
 
+    doc = {
+        'num' : num,
+        'bucket' : bucket_receive,
+        'done' : 0
+    }
+
+    db.bucket.insert_one(doc)
+
+    return jsonify({'msg': 'data saved!'})
     
 
 if __name__ == '__main__':
