@@ -13,6 +13,20 @@
     $(document).ready(function () {
       show_item();
     });
+
+    function delete_bucket(num) {
+            $.ajax({
+                type: "POST",
+                url: "/delete",
+                data: { num_give: num },
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload()
+                }
+            });
+          }
+
+
     function show_item() {
       $('#comment-list').empty();
       $.ajax({
@@ -22,13 +36,14 @@
         success: function (response) {
           let messages = response['gudangs'];
           for (let i = 0; i < messages.length; i++) {
+            let num = messages[i]['num'];
             let name = messages[i]['name'];
             let qty = messages[i]['quantity'];
             let temp_html = `
                             <div class="col">
                               <div class="card">
                                 <div class="card-header">
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  <button type="button" class="btn-close" onclick="delete_bucket(${num})" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="card-body">
                                   <blockquote class="blockquote mb-0">
@@ -51,17 +66,7 @@
       });
     }
     
-    function delete_bucket(num) {
-            $.ajax({
-                type: "POST",
-                url: "/delete",
-                data: { num_give: num },
-                success: function (response) {
-                    alert(response["msg"]);
-                    window.location.reload();
-                }
-            });
-          }
+   
           
     function save_item() {
 
