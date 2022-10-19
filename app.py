@@ -26,6 +26,11 @@ def bucket_post():
 
     return jsonify({'msg': 'data saved!'})
 
+@app.route("/gudang", methods=["GET"])
+def gudang_get():
+    gudangs_list = list(db.gudangku.find({}, {'_id': False}))
+    return jsonify({'gudangs': gudangs_list})
+
 @app.route("/delete", methods=["POST"])
 def delete_bucket():
     num_receive = request.form['num_give']

@@ -1,34 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GUDANGKU</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GUDANGKU</title>
+  
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
-    
-    
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-
-    <script>
-
-      function save_item() {
-              
-              let item_name = $('#nama_item').val()
-              let item_quantity = $('#jumlah_item').val()
-
-              $.ajax({
-              type: "POST",
-              url: "/gudang",
-              data: {item_name_give: item_name,
-                      item_quantity_give: item_quantity},
-              success: function (response) {
-                  alert(response["msg"])
-                  window.location.reload()
-                  }
-              });
+  <script>
+    $(document).ready(function () {
+      show_item();
+    });
+    function show_item() {
+      $('#comment-list').empty();
+      $.ajax({
+        type: "GET",
+        url: "/gudang",
+        data: {},
+        success: function (response) {
+          let messages = response['gudangs'];
+          for (let i = 0; i < messages.length; i++) {
+            let name = messages[i]['name'];
+            let qty = messages[i]['quantity'];
+            let temp_html = `
+                            <div class="col">
+                              <div class="card">
+                                <div class="card-header">
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="card-body">
+                                  <blockquote class="blockquote mb-0">
+                                    <div class="col-md-10">
+                                      <div class="d-flex justify-content-center">
+                                        <p>${name}</p>
+                                        <button type="button" class="btn btn-outline-primary">-</button>
+                                        <p>${qty}</p>
+                                        <button type="button" class="btn btn-outline-primary">+</button>
+                                      </div>
+                                    </div>
+                                  </blockquote>
+                                </div>
+                              </div>
+                            </div>                                    
+                        `;
+            $('#item-list').append(temp_html);
           }
-        
-          function delete_bucket(num) {
+        }
+      });
+    }
+    
+    function delete_bucket(num) {
             $.ajax({
                 type: "POST",
                 url: "/delete",
@@ -39,68 +61,98 @@
                 }
             });
           }
-    </script>
+          
+    function save_item() {
 
-    <style>
-      .gudang-header{
-        width: 100%;
-            height: 200px;
+      let item_name = $('#nama_item').val()
+      let item_quantity = $('#jumlah_item').val()
 
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.freepik.com/free-photo/interior-large-distribution-warehouse-with-shelves-stacked-with-palettes-goods-ready-market_342744-1481.jpg?size=626&ext=jpg&ga=GA1.2.2107063185.1666106367');
-            background-position: center;
-            background-size: cover;
+      $.ajax({
+        type: "POST",
+        url: "/gudang",
+        data: {
+          item_name_give: item_name,
+          item_quantity_give: item_quantity
+        },
+        success: function (response) {
+          alert(response["msg"])
+          window.location.reload()
+        }
+      });
+    }
 
-            color: white;
+  </script>
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-      }
-    </style>
-  
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <style>
+    .gudang-header {
+      width: 100%;
+      height: 200px;
 
-   
-  </head>
+      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.freepik.com/free-photo/interior-large-distribution-warehouse-with-shelves-stacked-with-palettes-goods-ready-market_342744-1481.jpg?size=626&ext=jpg&ga=GA1.2.2107063185.1666106367');
+      background-position: center;
+      background-size: cover;
 
-  <body>
+      color: white;
 
-    <div class="d-flex justify-content-center mt-4 gudang-header">
-      <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal" id="modalButton">
-        Add Item
-      </button>
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+
+  <div class="d-flex justify-content-center mt-4 gudang-header">
+    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal"
+      id="modalButton">
+      Add Item
+    </button>
+  </div>
+  <div class="container">
+    <div class="row" id="item-list">
+      <!--  -->
     </div>
+  </div>
 
 
-      <!-- Button trigger modal -->
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
+  <!-- Button trigger modal -->
 
-            <label for="nama_item" class="form-label">Item name</label>
-            <input type="text" id="nama_item" class="form-control" aria-describedby="passwordHelpBlock">
-            
-            <label for="jumlah_item" class="form-label">Item quantity</label>
-            <input type="text" id="jumlah_item" class="form-control" aria-describedby="passwordHelpBlock">
-          </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="save_item()">Save</button>
-          </div>
+          <label for="nama_item" class="form-label">Item name</label>
+          <input type="text" id="nama_item" class="form-control" aria-describedby="passwordHelpBlock">
+
+          <label for="jumlah_item" class="form-label">Item quantity</label>
+          <input type="text" id="jumlah_item" class="form-control" aria-describedby="passwordHelpBlock">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="save_item()">Save</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+</body>
 
 </html>
