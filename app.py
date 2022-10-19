@@ -19,6 +19,7 @@ def bucket_post():
     doc = {
         'name' : item_name_receive,
         'quantity' : item_quantity_receive,
+        
     }
 
     db.gudangku.insert_one(doc)
