@@ -26,6 +26,10 @@ def bucket_post():
 
     return jsonify({'msg': 'data saved!'})
     
+@app.route("/gudang", methods=["GET"])
+def gudang_get():
+    gudangs_list = list(db.gudangku.find({}, {'_id': False}))
+    return jsonify({'gudangs': gudangs_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
