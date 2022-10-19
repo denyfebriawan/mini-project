@@ -14,9 +14,11 @@ def home():
 def bucket_post():
     item_name_receive = request.form['item_name_give']
     item_quantity_receive = request.form['item_quantity_give']
-    count = db.bucket.count_documents({})
+    count = db.gudangku.count_documents({})
+    num = count + 1
 
     doc = {
+        'num': num,
         'name' : item_name_receive,
         'quantity' : item_quantity_receive,
         
@@ -34,7 +36,7 @@ def gudang_get():
 @app.route("/delete", methods=["POST"])
 def delete_bucket():
     num_receive = request.form['num_give']
-    db.bucket.delete_one({'num': int(num_receive)})
+    db.gudangku.delete_one({'num': int(num_receive)})
     return jsonify({'msg': 'delete done!'})
 
 if __name__ == '__main__':
