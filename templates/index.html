@@ -41,7 +41,7 @@
             let qty = messages[i]['quantity'];
             let temp_html = `
                             <div class="col">
-                              <div class="card">
+                              <div class="card mt-3">
                                 <div class="card-header">
                                   <button type="button" class="btn-close" onclick="delete_bucket(${num})" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
@@ -49,10 +49,12 @@
                                   <blockquote class="blockquote mb-0">
                                     <div class="col-md-10">
                                       <div class="d-flex justify-content-center">
-                                        <p>${name}</p>
-                                        <button type="button" class="btn btn-outline-primary">-</button>
-                                        <p>${qty}</p>
-                                        <button type="button" class="btn btn-outline-primary">+</button>
+                                        <p class="mx-4">${name}</p>
+                                        
+                                          <i class="fa-solid fa-minus mx-2 mt-2"></i>
+                                          <p>${qty}</p>
+                                          <i class="fa-solid fa-plus mx-2 mt-2"></i>
+                                          
                                       </div>
                                     </div>
                                   </blockquote>
@@ -89,6 +91,8 @@
 
   </script>
 
+  <script src="https://kit.fontawesome.com/48943e5573.js" crossorigin="anonymous"></script>
+
   <style>
     .gudang-header {
       width: 100%;
@@ -104,6 +108,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    i {
+      cursor: pointer;
     }
   </style>
 
@@ -122,7 +130,7 @@
     </button>
   </div>
   <div class="container">
-    <div class="row" id="item-list">
+    <div class="row row-cols-3" id="item-list">
       <!--  -->
     </div>
   </div>
