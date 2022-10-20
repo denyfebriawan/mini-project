@@ -1,226 +1,43 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GUDANGKU</title>
-  
-  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <head>
 
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <script>
-    $(document).ready(function () {
-      show_item();
-      $('#myInput').on("keyup", function () {
-        var value = $(this).val().toLowerCase();
-        $('#item-list #cardBox').filter(function () {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        })
-      })
-    });
-
-    function delete_bucket(num) {
-            $.ajax({
-                type: "POST",
-                url: "/delete",
-                data: { num_give: num },
-                success: function (response) {
-                  Swal.fire({
-                    icon: 'success',
-                    text: response['msg']
-                  }).then(function () {
-                    window.location.reload()
-                  })
-                }
-            });
-          }
-
-
-    function show_item() {
-      $('#comment-list').empty();
-      $.ajax({
-        type: "GET",
-        url: "/gudang",
-        data: {},
-        success: function (response) {
-          let messages = response['gudangs'];
-          for (let i = 0; i < messages.length; i++) {
-            let num = messages[i]['num'];
-            let name = messages[i]['name'];
-            let qty = messages[i]['quantity'];
-            let temp_html = `
-                            <div class="col" id="cardBox">
-                              <div class="card mt-3">
-                                <div class="card-header">
-                                  <button type="button" class="btn-close" onclick="delete_bucket(${num})" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="card-body" >
-                                  <blockquote class="blockquote mb-0">
-                                    <div class="col-md-10">
-                                      <div class="d-flex justify-content-center">
-                                        <p class="mx-4" id="nameTag">${name}</p>       
-                                          <i class="fa-solid fa-minus mx-2 mt-2" onclick="decrease(${num}, ${qty})"></i>
-                                          <p >${qty}</p>
-                                          <i class="fa-solid fa-plus mx-2 mt-2" onclick="increase(${num}, ${qty})"></i>
-                                          
-                                          
-                                      </div>
-                                    </div>
-                                  </blockquote>
-                                </div>
-                              </div>
-                            </div>                                    
-                        `;
-            $('#item-list').append(temp_html);
-          }
-        }
-      });
-    }
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        
+        <title>Login Example</title>
     
-   
-          
-    function save_item() {
-
-      let item_name = $('#nama_item').val()
-      let item_quantity = $('#jumlah_item').val()
-
-      $.ajax({
-        type: "POST",
-        url: "/gudang",
-        data: {
-          item_name_give: item_name,
-          item_quantity_give: item_quantity
-        },
-        success: function (response) {
-          Swal.fire({
-            icon: 'success',
-            text: response['msg']
-          }).then(function () {
-            window.location.reload()
-          })
-        }
-      });
-    }
-
-    function increase(num, quan) {
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     
-      $.ajax({
-        type: "POST",
-        url: "/increase",
-        data: {
-          quan_give: parseInt(quan),
-          num_give: num
-        },
-        success: function (response) {
-          console.log(response['msg'])
-          window.location.reload()
-        }
-      });
-    }
+    </head>
     
-    function decrease(num, quan) {
-
-      $.ajax({
-        type: "POST",
-        url: "/decrease",
-        data: {
-          quan_give: parseInt(quan),
-          num_give: num
-        },
-        success: function (response) {
-          console.log(response['msg'])
-          window.location.reload()
-        }
-      });
-    }
-    
-
-
-  </script>
-
-  <script src="https://kit.fontawesome.com/48943e5573.js" crossorigin="anonymous"></script>
-
-  <style>
-    .gudang-header {
-      width: 100%;
-      height: 200px;
-
-      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.freepik.com/free-photo/interior-large-distribution-warehouse-with-shelves-stacked-with-palettes-goods-ready-market_342744-1481.jpg?size=626&ext=jpg&ga=GA1.2.2107063185.1666106367');
-      background-position: center;
-      background-size: cover;
-
-      color: white;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    i {
-      cursor: pointer;
-    }
-  </style>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-
-</head>
-
-<body>
-
-  <div class="d-flex justify-content-center mt-4 gudang-header">
-    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      id="modalButton">
-      Add Item
-    </button>
-  </div>
-
-  <div class="container my-2">
-    <input type="text" class="form-control" id="myInput" placeholder="Search for item...">
-  </div>
-
-  <div class="container">
-    <div class="row row-cols-3" id="item-list">
-      <!--  -->
-    </div>
-  </div>
-
-
-
-  <!-- Button trigger modal -->
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <body>
+        {% extends "layout.html" %}
+        {% block body %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <form method=POST action="{{ url_for('login') }}">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Username</label>
+                            <input type="text" class="form-control" name="username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" name="pass" placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                    </form>
+                    <br>
+                    <div>
+                        Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-
-          <label for="nama_item" class="form-label">Item name</label>
-          <input type="text" id="nama_item" class="form-control" aria-describedby="passwordHelpBlock">
-
-          <label for="jumlah_item" class="form-label">Item quantity</label>
-          <input type="text" id="jumlah_item" class="form-control" aria-describedby="passwordHelpBlock">
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="save_item()">Save</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
-</body>
-
+        {% endblock %}
+    </body>
 </html>
