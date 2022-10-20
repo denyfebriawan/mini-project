@@ -11,6 +11,12 @@
   <script>
     $(document).ready(function () {
       show_item();
+      $('#myInput').on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $('#item-list #cardBox').filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        })
+      })
     });
 
     function delete_bucket(num) {
@@ -39,17 +45,16 @@
             let name = messages[i]['name'];
             let qty = messages[i]['quantity'];
             let temp_html = `
-                            <div class="col">
+                            <div class="col" id="cardBox">
                               <div class="card mt-3">
                                 <div class="card-header">
                                   <button type="button" class="btn-close" onclick="delete_bucket(${num})" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" >
                                   <blockquote class="blockquote mb-0">
                                     <div class="col-md-10">
                                       <div class="d-flex justify-content-center">
-                                        <p class="mx-4">${name}</p>
-                                        
+                                        <p class="mx-4" id="nameTag">${name}</p>       
                                           <i class="fa-solid fa-minus mx-2 mt-2"></i>
                                           <p>${qty}</p>
                                           <i class="fa-solid fa-plus mx-2 mt-2"></i>
@@ -128,6 +133,11 @@
       Add Item
     </button>
   </div>
+
+  <div class="container my-2">
+    <input type="text" class="form-control" id="myInput" placeholder="Search for item...">
+  </div>
+
   <div class="container">
     <div class="row row-cols-3" id="item-list">
       <!--  -->
