@@ -7,6 +7,7 @@ client = MongoClient('mongodb://denyfebriawan:denyfebriawan@ac-eqp3ojr-shard-00-
 db = client.dbsparta
 
 app = Flask(__name__)
+app.secret_key = 'mysecret'
 
 @app.route("/gudang", methods=["POST"])
 def bucket_post():
@@ -110,5 +111,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.secret_key = 'mysecret'
+   
     app.run(debug=True)
