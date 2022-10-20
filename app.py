@@ -9,6 +9,13 @@ db = client.dbsparta
 app = Flask(__name__)
 app.secret_key = 'mysecret'
 
+@app.route('/')
+def index():
+    if 'username' in session:
+        return 'You are logged in as ' + session['username']
+
+    return render_template('index.html')
+
 @app.route("/gudang", methods=["POST"])
 def bucket_post():
     item_name_receive = request.form['item_name_give']
@@ -70,12 +77,7 @@ def decrease():
 def home():
     return render_template('home.html')
 
-@app.route('/')
-def index():
-    if 'username' in session:
-        return 'You are logged in as ' + session['username']
 
-    return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
 def login():
