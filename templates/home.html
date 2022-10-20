@@ -93,6 +93,21 @@
       });
     }
 
+    function logout() {
+      $.ajax({
+        type: "GET",
+        url: "/logout",
+        data: {
+          item_name_give: item_name,
+          item_quantity_give: item_quantity
+        },
+        success: function (response) {
+          alert(response["msg"])
+          window.location.reload()
+        }
+      });
+    }
+
   </script>
 
   <script src="https://kit.fontawesome.com/48943e5573.js" crossorigin="anonymous"></script>
@@ -133,6 +148,7 @@
       Add Item
     </button>
   </div>
+  <button class="btn btn-danger btn-lg"><a href="/logout">LOGOUT</a></button>
 
   <div class="container my-2">
     <input type="text" class="form-control" id="myInput" placeholder="Search for item...">
@@ -153,7 +169,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{ session['username'] }}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

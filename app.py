@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, jsonify, session
+
+from flask import Flask, request, render_template, jsonify, session, redirect, url_for
 from pymongo import MongoClient
-from Bcrypt import bcrypt
+import bcrypt
 
 client = MongoClient('mongodb://denyfebriawan:denyfebriawan@ac-eqp3ojr-shard-00-00.bp160w6.mongodb.net:27017,ac-eqp3ojr-shard-00-01.bp160w6.mongodb.net:27017,ac-eqp3ojr-shard-00-02.bp160w6.mongodb.net:27017/?ssl=true&replicaSet=atlas-jrwx8m-shard-0&authSource=admin&retryWrites=true&w=majority')
 db = client.dbsparta
@@ -36,6 +37,10 @@ def delete_bucket():
     db.gudangku.delete_one({'num': int(num_receive)})
     return jsonify({'msg': 'delete done!'})
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route('/')
 def index():
     if 'username' in session:
@@ -45,13 +50,13 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    users = mongo.db.users
+    users = db.users
     login_user = users.find_one({'name' : request.form['username']})
 
     if login_user:
-        if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
+        if request.form['pass'] == login_user['password']:
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
+            return redirect(url_for('home'))
 
     return 'Invalid username/password combination'
 
@@ -62,14 +67,19 @@ def register():
         existing_user = users.find_one({'name' : request.form['username']})
 
         if existing_user is None:
-            hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'], 'password' : hashpass})
-            session['username'] = request.form['username']
+            
+            db.users.insert_one({'name' : request.form['username'], 'password' :request.form['pass']})
+            
             return redirect(url_for('index'))
         
         return 'That username already exists!'
 
     return render_template('register.html')
+
+@app.route('/logout', methods=['get'])
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.secret_key = 'mysecret'
