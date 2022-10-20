@@ -8,6 +8,8 @@
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"
     integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
   <script>
     $(document).ready(function () {
       show_item();
@@ -25,8 +27,12 @@
                 url: "/delete",
                 data: { num_give: num },
                 success: function (response) {
-                    alert(response["msg"]);
+                  Swal.fire({
+                    icon: 'success',
+                    text: response['msg']
+                  }).then(function () {
                     window.location.reload()
+                  })
                 }
             });
           }
@@ -55,9 +61,10 @@
                                     <div class="col-md-10">
                                       <div class="d-flex justify-content-center">
                                         <p class="mx-4" id="nameTag">${name}</p>       
-                                          <i class="fa-solid fa-minus mx-2 mt-2"></i>
-                                          <p>${qty}</p>
-                                          <i class="fa-solid fa-plus mx-2 mt-2"></i>
+                                          <i class="fa-solid fa-minus mx-2 mt-2" onclick="decrease(${num}, ${qty})"></i>
+                                          <p >${qty}</p>
+                                          <i class="fa-solid fa-plus mx-2 mt-2" onclick="increase(${num}, ${qty})"></i>
+                                          
                                           
                                       </div>
                                     </div>
@@ -87,11 +94,49 @@
           item_quantity_give: item_quantity
         },
         success: function (response) {
-          alert(response["msg"])
+          Swal.fire({
+            icon: 'success',
+            text: response['msg']
+          }).then(function () {
+            window.location.reload()
+          })
+        }
+      });
+    }
+
+    function increase(num, quan) {
+    
+      $.ajax({
+        type: "POST",
+        url: "/increase",
+        data: {
+          quan_give: parseInt(quan),
+          num_give: num
+        },
+        success: function (response) {
+          console.log(response['msg'])
           window.location.reload()
         }
       });
     }
+    
+    function decrease(num, quan) {
+
+      $.ajax({
+        type: "POST",
+        url: "/decrease",
+        data: {
+          quan_give: parseInt(quan),
+          num_give: num
+        },
+        success: function (response) {
+          console.log(response['msg'])
+          window.location.reload()
+        }
+      });
+    }
+    
+
 
   </script>
 

@@ -1,3 +1,4 @@
+
 from flask import Flask, request, render_template, jsonify
 from pymongo import MongoClient
 
@@ -38,6 +39,35 @@ def delete_bucket():
     num_receive = request.form['num_give']
     db.gudangku.delete_one({'num': int(num_receive)})
     return jsonify({'msg': 'delete done!'})
+
+@app.route("/increase", methods=['post'])
+def increase():
+    
+    num_receive = request.form['num_give']
+    quan_receive = request.form['quan_give']
+    inc_quan = int(quan_receive)
+
+    db.gudangku.update_one(
+        {'num': int(num_receive)},
+        {'$set': {'quantity': inc_quan + 1}}
+        )
+
+    return jsonify({'msg': "data increased" })
+
+@app.route("/decrease", methods=['post'])
+def decrease():
+    
+    num_receive = request.form['num_give']
+    quan_receive = request.form['quan_give']
+    inc_quan = int(quan_receive)
+
+    db.gudangku.update_one(
+        {'num': int(num_receive)},
+        {'$set': {'quantity': inc_quan - 1}}
+        )
+
+    return jsonify({'msg': "data decreased" })
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
